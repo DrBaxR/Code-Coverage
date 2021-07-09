@@ -1,8 +1,8 @@
 package me.drbaxr.codecoverage.expression
 
-class Expression(private val content: String) {
+class Expression(private val content: String) : Matcher {
 
-    fun matches(syntax: String, matchCase: Boolean = true): Boolean {
+    override fun matches(syntax: String, matchCase: Boolean): Boolean {
         if (syntax == "**") return true
 
         if (syntax.startsWith("*") && syntax.endsWith("*"))
@@ -14,7 +14,10 @@ class Expression(private val content: String) {
         if (syntax.endsWith("*"))
             return contentStartsWithSyntaxTerm(syntax, matchCase)
 
-        throw InvalidSyntaxException(syntax)
+        return when (matchCase) {
+            true -> content == syntax
+            false -> content.equals(syntax, true)
+        }
     }
 
     private fun contentContainsSyntaxTerm(syntax: String, matchCase: Boolean): Boolean {
