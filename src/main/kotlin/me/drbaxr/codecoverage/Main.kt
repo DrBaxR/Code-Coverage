@@ -1,7 +1,10 @@
 package me.drbaxr.codecoverage
 
-fun main(args: Array<String>) {
-    println("finally made it work...")
+import me.drbaxr.codecoverage.util.FileTools
 
-    args.forEach { println(it) }
+
+fun main(args: Array<String>) {
+    val files = FileTools.getFilePaths(".")
+
+    files.forEach { println(it) }
 }
