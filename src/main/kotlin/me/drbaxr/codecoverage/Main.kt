@@ -1,10 +1,10 @@
 package me.drbaxr.codecoverage
 
-import me.drbaxr.codecoverage.util.FileTools
+import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 
 
 fun main(args: Array<String>) {
-    val files = FileTools.getFilePaths(".")
+    val testFileExtractor = ManualTestFileExtractor(".")
 
-    files.forEach { println(it) }
+    testFileExtractor.findTestFiles().forEach { println(it) }
 }

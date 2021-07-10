@@ -8,6 +8,22 @@ class PathExpressionTest {
     var pathExpression = PathExpression("")
 
     @Test
+    fun `test any expression syntax`() {
+        val syntax = "**"
+        pathExpression = PathExpression("sdf/sdfwer/tertgd/vbcvb")
+        assertEquals(pathExpression.matches(syntax), true)
+
+        pathExpression = PathExpression("***/ssdfAHDF/123123/98")
+        assertEquals(pathExpression.matches(syntax), true)
+
+        pathExpression = PathExpression("test")
+        assertEquals(pathExpression.matches(syntax), true)
+
+        pathExpression = PathExpression("")
+        assertEquals(pathExpression.matches(syntax), true)
+    }
+
+    @Test
     fun `test single expression`() {
         pathExpression = PathExpression("PathExpressionTest.kt")
 

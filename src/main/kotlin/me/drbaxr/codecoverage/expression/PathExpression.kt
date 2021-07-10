@@ -1,10 +1,13 @@
 package me.drbaxr.codecoverage.expression
 
-class PathExpression(path: String) : Matcher {
+class PathExpression(val path: String) : Matcher {
 
     private val orderedExpressions: List<Matcher> = path.split("/").map { Expression(it) }
 
     override fun matches(syntax: String, matchCase: Boolean): Boolean {
+        if (syntax == "**")
+            return true
+
         var splitSyntax = syntax.split("/")
 
         if (splitSyntax.size == orderedExpressions.size) {
