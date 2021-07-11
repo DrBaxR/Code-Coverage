@@ -15,11 +15,7 @@ class ManualTestFileExtractorTest {
             "src/test/java/package/sub/FileTest.java",
             "src/test/java/package/sub/mid/MidTestName.java",
         )
-        val testFileExtractor = ManualTestFileExtractor(
-            "src/test/resources/test-file-extractor/maven-like",
-            "src/test/resources/test-file-extractor/config1/test-files.txt",
-            "src/test/resources/test-file-extractor/config1/ignored-test-files.txt",
-        )
+        val testFileExtractor = createManualTestFileExtractorWithConfig(1)
 
         assertEquals(expected.toSet(), testFileExtractor.findTestFiles().toSet())
     }
@@ -34,11 +30,7 @@ class ManualTestFileExtractorTest {
             "src/test/java/package/sub/mid/MidTestName.java",
             "src/main/java/Main.java"
         )
-        val testFileExtractor = ManualTestFileExtractor(
-            "src/test/resources/test-file-extractor/maven-like",
-            "src/test/resources/test-file-extractor/config2/test-files.txt",
-            "src/test/resources/test-file-extractor/config2/ignored-test-files.txt",
-        )
+        val testFileExtractor = createManualTestFileExtractorWithConfig(2)
 
         assertEquals(expected.toSet(), testFileExtractor.findTestFiles().toSet())
     }
@@ -49,12 +41,16 @@ class ManualTestFileExtractorTest {
             "src/test/java/SampleTest.java",
             "src/test/java/AnotherTest.java",
         )
-        val testFileExtractor = ManualTestFileExtractor(
-            "src/test/resources/test-file-extractor/maven-like",
-            "src/test/resources/test-file-extractor/config3/test-files.txt",
-            "src/test/resources/test-file-extractor/config3/ignored-test-files.txt",
-        )
+        val testFileExtractor = createManualTestFileExtractorWithConfig(3)
 
         assertEquals(expected.toSet(), testFileExtractor.findTestFiles().toSet())
+    }
+
+    private fun createManualTestFileExtractorWithConfig(configNumber: Int): ManualTestFileExtractor {
+        return ManualTestFileExtractor(
+            "src/test/resources/test-file-extractor/maven-like",
+            "src/test/resources/test-file-extractor/config$configNumber/test-files.txt",
+            "src/test/resources/test-file-extractor/config$configNumber/ignored-test-files.txt",
+        )
     }
 }
