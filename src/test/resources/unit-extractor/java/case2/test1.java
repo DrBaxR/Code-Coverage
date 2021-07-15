@@ -8,7 +8,8 @@ package game.animation.ease;
  */
 public class Back
 {
-    public static float easeIn(float time, int begin, int change, float duration, Float overshoot)
+    public static float easeIn(float time, int begin, int change, float duration,
+                               Float overshoot)
     {
         if (overshoot == null)
             overshoot = 1.70158f;

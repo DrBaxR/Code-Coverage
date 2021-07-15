@@ -31,7 +31,6 @@ class JavaMethodHeaderIdentifier : HeaderIdentifier {
 
         val expressionWithoutModifiersAndType = removeModifiersAndType(expression)
         return containsParenthesis(expressionWithoutModifiersAndType)
-
     }
 
     private fun removeModifiersAndType(expression: String): String {
@@ -42,14 +41,9 @@ class JavaMethodHeaderIdentifier : HeaderIdentifier {
         return filteredSplitExpression.subList(1, filteredSplitExpression.size).fold("") { acc, word -> acc + word }
     }
 
-    // TODO: replace this with "has matching parenthesis"
-    /*fun asd( int a,
-    * int b
-    * )
-    * */
     private fun containsParenthesis(expression: String): Boolean {
         val trimmedExpression = expression.trim()
-        return trimmedExpression.contains('(') && trimmedExpression.contains(')')
+        return trimmedExpression.contains('(')
     }
 
     private fun containsIllegalExpression(expression: String): Boolean {
