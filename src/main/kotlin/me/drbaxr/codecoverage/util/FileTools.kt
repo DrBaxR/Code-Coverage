@@ -1,5 +1,6 @@
 package me.drbaxr.codecoverage.util
 
+import me.drbaxr.codecoverage.expression.PathExpression
 import java.io.File
 import java.util.*
 
@@ -38,6 +39,13 @@ class FileTools {
                 else
                     listToAddPaths.add(filePath)
             }
+        }
+
+        fun getFilesWithExtension(baseDir: String, extension: String, ignoredFiles: List<String> = listOf()): List<String> {
+            val allFilesExpressions = getDirectoryFilePaths(baseDir).map { PathExpression(it) }
+            val filesWithExtension = allFilesExpressions.filter { it.matches("**/*$extension") }
+
+            return filesWithExtension.map { it.path }.filter { !ignoredFiles.contains(it) }
         }
     }
 }

@@ -1,4 +1,6 @@
-package me.drbaxr.codecoverage.extractors.unit.identifiers
+package me.drbaxr.codecoverage.extractors.unit.java
+
+import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
 
 class JavaMethodHeaderIdentifier : HeaderIdentifier {
     private val methodModifiers = listOf(
@@ -16,9 +18,11 @@ class JavaMethodHeaderIdentifier : HeaderIdentifier {
     private val illegalExpressions = listOf(
         "new ".toRegex(),
         "for *\\(".toRegex(),
-        "=|-|\\+|\\*|\\+".toRegex(),
+        "=|-|\\+|\\*|\\.".toRegex(),
         "if *\\(".toRegex(),
         "switch *\\(".toRegex(),
+        "catch *\\(".toRegex(),
+        "while *\\(".toRegex(),
     )
 
     override fun isHeader(expression: String): Boolean {
@@ -38,6 +42,11 @@ class JavaMethodHeaderIdentifier : HeaderIdentifier {
         return filteredSplitExpression.subList(1, filteredSplitExpression.size).fold("") { acc, word -> acc + word }
     }
 
+    // TODO: replace this with "has matching parenthesis"
+    /*fun asd( int a,
+    * int b
+    * )
+    * */
     private fun containsParenthesis(expression: String): Boolean {
         val trimmedExpression = expression.trim()
         return trimmedExpression.contains('(') && trimmedExpression.contains(')')

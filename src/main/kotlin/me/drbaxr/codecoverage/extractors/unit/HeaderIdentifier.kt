@@ -1,4 +1,4 @@
-package me.drbaxr.codecoverage.extractors.unit.identifiers
+package me.drbaxr.codecoverage.extractors.unit
 
 interface HeaderIdentifier {
 

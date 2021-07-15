@@ -1,4 +1,6 @@
-package me.drbaxr.codecoverage.extractors.unit.identifiers
+package me.drbaxr.codecoverage.extractors.unit.java
+
+import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
 
 class JavaClassHeaderIdentifier : HeaderIdentifier {
     override fun isHeader(expression: String): Boolean {

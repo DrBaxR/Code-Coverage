@@ -1,7 +1,8 @@
 package me.drbaxr.codecoverage.util
 
-import me.drbaxr.codecoverage.extractors.unit.comment.CommentRemover
-import me.drbaxr.codecoverage.extractors.unit.identifiers.HeaderIdentifier
+import me.drbaxr.codecoverage.extractors.unit.CommentRemover
+import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
+import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
 class UnitTools {
@@ -14,8 +15,9 @@ class UnitTools {
             if (fileLines.isEmpty())
                 return null
 
+
             val firstBraceLineIndex =
-                fileLines.indexOfFirst { it.contains('{') && fileLines.indexOf(it) >= startLine - 1 }
+                fileLines.mapIndexed { index, line -> Pair(index, line) }.indexOfFirst { it.second.contains("{") && it.first >= startLine - 1 }
 
             if (firstBraceLineIndex < 0)
                 throw StartingBraceNotFoundException(startLine)

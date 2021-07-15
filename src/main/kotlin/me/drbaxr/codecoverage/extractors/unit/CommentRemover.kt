@@ -1,4 +1,4 @@
-package me.drbaxr.codecoverage.extractors.unit.comment
+package me.drbaxr.codecoverage.extractors.unit
 
 interface CommentRemover {
 

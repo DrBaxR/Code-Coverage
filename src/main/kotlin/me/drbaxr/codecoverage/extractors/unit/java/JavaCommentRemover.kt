@@ -1,4 +1,6 @@
-package me.drbaxr.codecoverage.extractors.unit.comment
+package me.drbaxr.codecoverage.extractors.unit.java
+
+import me.drbaxr.codecoverage.extractors.unit.CommentRemover
 
 class JavaCommentRemover : CommentRemover {
     override fun removeCommentLines(lines: List<String>): List<String> {
