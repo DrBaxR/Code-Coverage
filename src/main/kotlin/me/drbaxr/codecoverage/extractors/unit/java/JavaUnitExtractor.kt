@@ -5,6 +5,7 @@ import me.drbaxr.codecoverage.extractors.unit.UnitExtractor
 import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
+import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
 class JavaUnitExtractor(private val projectPath: String, private val testFileExtractor: TestFileExtractor) :
     UnitExtractor(projectPath) {
@@ -27,11 +28,15 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
             // TODO: exclude anonymous interfaces
             unitHeaders.map { header ->
                 val headerLine = fileLines.indexOfFirst { line -> line == header } + 1
-                val matchedBraces = UnitTools.findMatchingCurlyBrace(filePath, headerLine) ?: Pair(0, 0)
 
-                CodeUnit(header.trim(), filePath, IntRange(headerLine, matchedBraces.second))
+                try {
+                    val matchedBraces = UnitTools.findMatchingCurlyBrace(filePath, headerLine) ?: Pair(0, 0)
+                    CodeUnit(header.trim(), filePath, IntRange(headerLine, matchedBraces.second))
+                } catch (e: StartingBraceNotFoundException) {
+                    CodeUnit.EMPTY
+                }
             }
-        }
+        }.filter { !it.isEmpty() }
     }
 
 }

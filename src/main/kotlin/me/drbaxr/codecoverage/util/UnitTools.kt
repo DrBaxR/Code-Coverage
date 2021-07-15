@@ -20,7 +20,7 @@ class UnitTools {
                 fileLines.mapIndexed { index, line -> Pair(index, line) }.indexOfFirst { it.second.contains("{") && it.first >= startLine - 1 }
 
             if (firstBraceLineIndex < 0)
-                throw StartingBraceNotFoundException(startLine)
+                throw StartingBraceNotFoundException(startLine, filePath)
 
             var openBraces = 0
             for (currentLineIndex in firstBraceLineIndex..fileLines.lastIndex) {
