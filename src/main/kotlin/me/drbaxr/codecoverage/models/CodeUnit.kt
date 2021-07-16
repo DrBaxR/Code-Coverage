@@ -10,4 +10,30 @@ class CodeUnit(
     }
 
     fun isEmpty() = this == EMPTY
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CodeUnit
+
+        if (identifier != other.identifier) return false
+        if (hostFilePath != other.hostFilePath) return false
+        if (linesRange != other.linesRange) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = identifier.hashCode()
+        result = 31 * result + hostFilePath.hashCode()
+        result = 31 * result + linesRange.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "CodeUnit(identifier='$identifier', hostFilePath='$hostFilePath', linesRange=$linesRange)"
+    }
+
+
 }

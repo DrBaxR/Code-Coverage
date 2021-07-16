@@ -42,7 +42,7 @@ class UnitTools {
             val fileLines = FileTools.getFileLines(filePath)
             val linesThatAreNotComments = commentRemover.removeCommentLines(fileLines)
 
-            return linesThatAreNotComments.filter {
+            return linesThatAreNotComments.map { it.second }.filter {
                 identifiers.fold(false) { acc, identifier ->
                     acc || identifier.isHeader(it)
                 }

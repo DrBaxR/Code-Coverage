@@ -3,7 +3,7 @@ package me.drbaxr.codecoverage
 import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
 
-fun main(args: Array<String>) {
+fun main() {
 //    val test = JavaUnitExtractor(
 //        "src/test/resources/unit-extractor/java/case2",
 //        ManualTestFileExtractor("src/test/resources/unit-extractor/java/case1")
@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     val units = test.findUnits()
     units.forEach {
         println(it.identifier)
-//        println(it.hostFilePath)
-//        println(it.linesRange)
+        println(it.hostFilePath)
+        println(it.linesRange)
     }
 }

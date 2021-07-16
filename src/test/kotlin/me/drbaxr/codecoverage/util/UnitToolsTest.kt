@@ -11,7 +11,7 @@ import kotlin.test.assertFailsWith
 
 class UnitToolsTest {
 
-    val baseJavaResourceDirectory = "src/test/resources/unit-tools/java"
+    private val baseJavaResourceDirectory = "src/test/resources/unit-tools/java"
 
     @Test
     fun `test matching braces for empty file`() {
