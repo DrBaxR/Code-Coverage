@@ -1,9 +1,10 @@
 package me.drbaxr.codecoverage.extractors.testedunit.statements
 
-import me.drbaxr.codecoverage.models.TestStatement
+import me.drbaxr.codecoverage.models.CodeUnit
+import me.drbaxr.codecoverage.models.CodeStatement
 
 interface TestStatementsExtractor {
 
-    fun findTestStatements(): List<TestStatement>
+    fun findTestStatements(unit: CodeUnit): List<CodeStatement>
 
 }

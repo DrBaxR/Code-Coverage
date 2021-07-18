@@ -7,6 +7,7 @@ import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
 
+// todo: maybe rename this to annotation test unit extractor
 class JUnitTestUnitExtractor : TestUnitExtractor {
 
     private val testAnnotations = listOf("@Test")

@@ -1,8 +1,8 @@
 package me.drbaxr.codecoverage.models
 
 class CodeUnit(
-    val identifier: String,       // some would say 'unique identifier' ie. full classpath
-    val hostFilePath: String,
+    val identifier: String,     // some would say 'unique identifier' ie. package.methodName
+    val hostFilePath: String,   // path is relative to directory where jar is
     val linesRange: IntRange,   // should be from where head is located to where body ends
 ) {
     companion object {
