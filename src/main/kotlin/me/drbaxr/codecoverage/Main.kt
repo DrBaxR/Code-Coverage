@@ -5,8 +5,8 @@ import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
 
 fun main() {
-//    unitSample()
-    testUnitSample()
+    unitSample()
+//    testUnitSample()
 }
 
 fun unitSample() {
@@ -36,6 +36,6 @@ fun unitSample() {
 }
 
 fun testUnitSample() {
-    var extractor = JUnitTestUnitExtractor()
+    val extractor = JUnitTestUnitExtractor()
     extractor.findTestUnits("src/test/resources/test-unit-extractor/junit/Found.java").forEach { println(it) }
 }

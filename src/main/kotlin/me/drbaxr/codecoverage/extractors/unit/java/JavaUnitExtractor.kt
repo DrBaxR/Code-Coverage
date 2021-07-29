@@ -35,7 +35,8 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
                     CodeUnit(
                         "$packageName.${getUnitName(getUnitName(header.trim()))}",
                         filePath,
-                        IntRange(headerLine, matchedBraces.second)
+                        IntRange(headerLine, matchedBraces.second),
+                        CodeUnit.UnitTypes.CODE,
                     )
                 } catch (e: StartingBraceNotFoundException) {
                     CodeUnit.EMPTY

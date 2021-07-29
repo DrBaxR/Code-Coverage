@@ -27,7 +27,7 @@ class JUnitTestUnitExtractor : TestUnitExtractor {
 
     private fun getCodeUnit(filePath: String, headerLineIndex: Int): CodeUnit {
         val bracesLines = UnitTools.findMatchingCurlyBrace(filePath, headerLineIndex) ?: Pair(-1, -1)
-        return CodeUnit(fileLines[headerLineIndex].trim(), filePath, bracesLines.first..bracesLines.second)
+        return CodeUnit(fileLines[headerLineIndex].trim(), filePath, bracesLines.first..bracesLines.second, CodeUnit.UnitTypes.TEST)
     }
 
     private fun getFunctionHeaderLine(annotationLine: Int): Int {

@@ -18,9 +18,9 @@ class JUnitTestUnitExtractorTest {
         val filePath = "src/test/resources/test-unit-extractor/junit/Simple.java"
 
         val expected = listOf(
-            CodeUnit("public void m5() {", filePath, 58..62),
-            CodeUnit("public void m7() {", filePath, 70..72),
-            CodeUnit("public void m8() {", filePath, 75..78),
+            CodeUnit("public void m5() {", filePath, 58..62, CodeUnit.UnitTypes.TEST),
+            CodeUnit("public void m7() {", filePath, 70..72, CodeUnit.UnitTypes.TEST),
+            CodeUnit("public void m8() {", filePath, 75..78, CodeUnit.UnitTypes.TEST),
         )
 
         assertEquals(expected, junitTestUnitExtractor.findTestUnits(filePath))
@@ -31,9 +31,9 @@ class JUnitTestUnitExtractorTest {
         val filePath = "src/test/resources/test-unit-extractor/junit/FuckedUp.java"
 
         val expected = listOf(
-            CodeUnit("public void m5()", filePath, 67..71),
-            CodeUnit("public void m7()", filePath, 82..84),
-            CodeUnit("public void m8(){", filePath, 94..97),
+            CodeUnit("public void m5()", filePath, 67..71, CodeUnit.UnitTypes.TEST),
+            CodeUnit("public void m7()", filePath, 82..84, CodeUnit.UnitTypes.TEST),
+            CodeUnit("public void m8(){", filePath, 94..97, CodeUnit.UnitTypes.TEST),
         )
 
         assertEquals(expected, junitTestUnitExtractor.findTestUnits(filePath))
