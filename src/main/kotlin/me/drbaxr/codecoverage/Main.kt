@@ -1,9 +1,15 @@
 package me.drbaxr.codecoverage
 
+import me.drbaxr.codecoverage.extractors.testedunit.unit.java.JUnitTestUnitExtractor
 import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
 
 fun main() {
+//    unitSample()
+    testUnitSample()
+}
+
+fun unitSample() {
 //    val test = JavaUnitExtractor(
 //        "src/test/resources/unit-extractor/java/case2",
 //        ManualTestFileExtractor("src/test/resources/unit-extractor/java/case1")
@@ -25,8 +31,11 @@ fun main() {
 
     val units = test.findUnits()
     units.forEach {
-        println(it.identifier)
-        println(it.hostFilePath)
-        println(it.linesRange)
+        println(it)
     }
+}
+
+fun testUnitSample() {
+    var extractor = JUnitTestUnitExtractor()
+    extractor.findTestUnits("src/test/resources/test-unit-extractor/junit/Found.java").forEach { println(it) }
 }
