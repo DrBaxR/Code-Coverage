@@ -2,8 +2,8 @@ package me.drbaxr.codecoverage.extractors.testedunit.occurence
 
 import me.drbaxr.codecoverage.models.CodeUnit
 
-interface UnitOccurrenceExtractor {
+abstract class UnitOccurrenceExtractor(val allCodeUnits: List<CodeUnit>) {
 
-    fun findOccurrences(unit: CodeUnit): List<CodeUnit>
+    abstract fun findOccurrences(testUnit: CodeUnit): List<CodeUnit>
 
 }

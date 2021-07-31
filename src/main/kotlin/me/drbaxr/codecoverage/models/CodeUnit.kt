@@ -4,7 +4,7 @@ class CodeUnit(
     val identifier: String,     // some would say 'unique identifier' ie. package.methodName
     val hostFilePath: String,   // path is relative to directory where jar is
     val linesRange: IntRange,   // should be from where head is located to where body ends
-    val UnitType: UnitTypes?,
+    val unitType: UnitTypes?,
 ) {
     companion object {
         val EMPTY = CodeUnit("", "", -1..-1, null)
@@ -20,7 +20,7 @@ class CodeUnit(
         if (identifier != other.identifier) return false
         if (hostFilePath != other.hostFilePath) return false
         if (linesRange != other.linesRange) return false
-        if (UnitType != other.UnitType) return false
+        if (unitType != other.unitType) return false
 
         return true
     }
@@ -29,12 +29,12 @@ class CodeUnit(
         var result = identifier.hashCode()
         result = 31 * result + hostFilePath.hashCode()
         result = 31 * result + linesRange.hashCode()
-        result = 31 * result + (UnitType?.hashCode() ?: 0)
+        result = 31 * result + (unitType?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "CodeUnit(identifier='$identifier', hostFilePath='$hostFilePath', linesRange=$linesRange, UnitType=$UnitType)"
+        return "CodeUnit(identifier='$identifier', hostFilePath='$hostFilePath', linesRange=$linesRange, UnitType=$unitType)"
     }
 
 

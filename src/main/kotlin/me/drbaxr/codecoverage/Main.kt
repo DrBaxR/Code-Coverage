@@ -1,12 +1,17 @@
 package me.drbaxr.codecoverage
 
+import me.drbaxr.codecoverage.extractors.testedunit.occurence.JavaUnitOccurrenceExtractor
 import me.drbaxr.codecoverage.extractors.testedunit.unit.java.JUnitTestUnitExtractor
 import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
+import me.drbaxr.codecoverage.models.CodeUnit
 
 fun main() {
     unitSample()
 //    testUnitSample()
+
+//    val occ = JavaUnitOccurrenceExtractor()
+//    occ.findOccurrences(CodeUnit("asd", "src/test/resources/test-unit-extractor/junit/Found.java", 23..27, CodeUnit.UnitTypes.TEST))
 }
 
 fun unitSample() {
@@ -31,7 +36,7 @@ fun unitSample() {
 
     val units = test.findUnits()
     units.forEach {
-        println(it)
+        println(it.identifier)
     }
 }
 

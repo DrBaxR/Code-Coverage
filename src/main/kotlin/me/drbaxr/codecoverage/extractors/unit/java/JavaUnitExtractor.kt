@@ -10,40 +10,87 @@ import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 class JavaUnitExtractor(private val projectPath: String, private val testFileExtractor: TestFileExtractor) :
     UnitExtractor(projectPath) {
 
+    private val classUnitNames: MutableList<String> = mutableListOf()
+
     override fun findUnits(): List<CodeUnit> {
         val testFiles = testFileExtractor.findTestFiles()
         val sourceFiles = FileTools.getFilesWithExtension(projectPath, ".java", testFiles)
+        val units = getUnitsFromSourceFiles(sourceFiles)
 
-        return sourceFiles.flatMap {
-            val filePath = "$projectPath/$it"
-            val fileLines = FileTools.getFileLines(filePath)
-            val packageName = getPackageName(fileLines)
-
-            val unitHeaders = UnitTools.findUnitHeaders(
-                filePath,
-                JavaCommentRemover(),
-                JavaMethodHeaderIdentifier(),
-                JavaClassHeaderIdentifier()
-            )
-
-            // TODO: exclude anonymous interfaces
-            unitHeaders.map { header ->
-                val headerLine = fileLines.indexOfFirst { line -> line == header } + 1
-
-                try {
-                    val matchedBraces = UnitTools.findMatchingCurlyBrace(filePath, headerLine) ?: Pair(0, 0)
-                    CodeUnit(
-                        "$packageName.${getUnitName(getUnitName(header.trim()))}",
-                        filePath,
-                        IntRange(headerLine, matchedBraces.second),
-                        CodeUnit.UnitTypes.CODE,
-                    )
-                } catch (e: StartingBraceNotFoundException) {
-                    CodeUnit.EMPTY
-                }
-            }
-        }.filter { !it.isEmpty() }
+        return getUnitsWithCompleteIdentifiers(units)
     }
+
+    private fun getUnitsWithCompleteIdentifiers(incompleteUnits: List<CodeUnit>): List<CodeUnit> {
+        val completeUnits = mutableListOf<CodeUnit>()
+
+        incompleteUnits.forEach { unit ->
+            val splitIdentifier = unit.identifier.split('.')
+
+            if (classUnitNames.contains(splitIdentifier[splitIdentifier.lastIndex])) {
+                completeUnits.add(unit)
+            } else {
+                val parentClass = findUnitParentClass(incompleteUnits, unit)
+                val completeUnit = getCompleteUnit(parentClass, unit)
+
+                completeUnits.add(completeUnit)
+            }
+        }
+
+        return completeUnits
+    }
+
+    private fun findUnitParentClass(incompleteUnits: List<CodeUnit>, unit: CodeUnit): CodeUnit = incompleteUnits.find {
+        it.hostFilePath == unit.hostFilePath && it.linesRange.first <= unit.linesRange.first && it.linesRange.last >= unit.linesRange.last
+    } ?: CodeUnit.EMPTY
+
+    private fun getCompleteUnit(parentClass: CodeUnit, unit: CodeUnit): CodeUnit {
+        val splitUnitIdentifier = unit.identifier.split('.')
+        val splitParentClassIdentifier = parentClass.identifier.split('.')
+
+        val unitPackageName = splitUnitIdentifier
+            .subList(0, splitUnitIdentifier.lastIndex)
+            .fold("") { acc, s -> if (acc != "") "$acc.$s" else s }
+        val className = splitParentClassIdentifier[splitParentClassIdentifier.lastIndex]
+        val unitName = splitUnitIdentifier[splitUnitIdentifier.lastIndex]
+
+        return CodeUnit(
+            "$unitPackageName.$className.$unitName",
+            unit.hostFilePath,
+            unit.linesRange,
+            unit.unitType
+        )
+    }
+
+    // also adds the names of classes to the classUnitNames list
+    private fun getUnitsFromSourceFiles(sourceFiles: List<String>) = sourceFiles.flatMap {
+        val filePath = "$projectPath/$it"
+        val fileLines = FileTools.getFileLines(filePath)
+        val packageName = getPackageName(fileLines)
+
+        val unitHeaders = UnitTools.findUnitHeaders(
+            filePath,
+            JavaCommentRemover(),
+            JavaMethodHeaderIdentifier(),
+            JavaClassHeaderIdentifier()
+        )
+
+        // TODO: exclude anonymous interfaces
+        unitHeaders.map { header ->
+            val headerLine = fileLines.indexOfFirst { line -> line == header } + 1
+
+            try {
+                val matchedBraces = UnitTools.findMatchingCurlyBrace(filePath, headerLine) ?: Pair(0, 0)
+                CodeUnit(
+                    "$packageName.${getUnitName(getUnitName(header.trim()))}",
+                    filePath,
+                    IntRange(headerLine, matchedBraces.second),
+                    CodeUnit.UnitTypes.CODE,
+                )
+            } catch (e: StartingBraceNotFoundException) {
+                CodeUnit.EMPTY
+            }
+        }
+    }.filter { !it.isEmpty() }
 
     private fun getPackageName(fileLines: List<String>): String {
         var i = 0;
@@ -69,7 +116,10 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
         val nameStartIndex = unitHeader.indexOf("class ") + "class ".length
         val nameEndIndex = findClassNameEndIndex(nameStartIndex, unitHeader)
 
-        return unitHeader.substring(nameStartIndex..nameEndIndex)
+        val className = unitHeader.substring(nameStartIndex..nameEndIndex)
+        classUnitNames.add(className)
+
+        return className
     }
 
     private fun findMethodName(unitHeader: String): String {
