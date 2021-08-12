@@ -93,14 +93,17 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
     }.filter { !it.isEmpty() }
 
     private fun getPackageName(fileLines: List<String>): String {
-        var i = 0;
-        while (fileLines[i].trim() == "")
+        val commentRemover = JavaCommentRemover()
+        val nonCommentLines = commentRemover.removeCommentLines(fileLines)
+
+        var i = 0
+        while (nonCommentLines[i].second.trim() == "")
             i++
 
-        val maybePackageLine = fileLines[i].trim().replace(";", "")
+        val maybePackageLine = fileLines[nonCommentLines[i].first - 1].trim().replace(";", "")
         return when (maybePackageLine.contains("package ")) {
             true -> maybePackageLine.removePrefix("package ").trim()
-            false -> ""
+            false -> "" // TODO: rethink this because it makes no sense
         }
     }
 

@@ -3,6 +3,7 @@ package me.drbaxr.codecoverage.extractors.unit.java
 import me.drbaxr.codecoverage.extractors.unit.CommentRemover
 
 class JavaCommentRemover : CommentRemover {
+    // pair of initial line number  in file (not index of line in array) and the content of said line
     override fun removeCommentLines(lines: List<String>): List<Pair<Int, String>> {
         var notCommentLines = removeSingleLineComments(lines.mapIndexed { index, line -> Pair(index, line) })
         notCommentLines = removeMultiLineComments(notCommentLines)

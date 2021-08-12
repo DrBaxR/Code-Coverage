@@ -7,11 +7,19 @@ import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
 import me.drbaxr.codecoverage.models.CodeUnit
 
 fun main() {
-    unitSample()
+//    unitSample()
 //    testUnitSample()
 
-//    val occ = JavaUnitOccurrenceExtractor()
-//    occ.findOccurrences(CodeUnit("asd", "src/test/resources/test-unit-extractor/junit/Found.java", 23..27, CodeUnit.UnitTypes.TEST))
+    val ue = JavaUnitExtractor(
+        "src/test/resources/sample-projects/junit-tests-master",
+        ManualTestFileExtractor("src/test/resources/sample-projects/junit-tests-master")
+    )
+
+    ue.findUnits()
+        .forEach { println(it.identifier) }
+
+    val occ = JavaUnitOccurrenceExtractor(listOf(), listOf())
+    occ.findOccurrences("src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo/TestMyTestClass.java")
 }
 
 fun unitSample() {
@@ -33,6 +41,11 @@ fun unitSample() {
         "src/test/resources/sample-projects/Game-master",
         ManualTestFileExtractor("src/test/resources/sample-projects/Game-master")
     )
+
+//    val test = JavaUnitExtractor(
+//        "src/test/resources/sample-projects/junit-tests-master",
+//        ManualTestFileExtractor("src/test/resources/sample-projects/junit-tests-master")
+//    )
 
     val units = test.findUnits()
     units.forEach {
