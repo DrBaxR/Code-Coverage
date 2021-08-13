@@ -15,11 +15,10 @@ fun main() {
         ManualTestFileExtractor("src/test/resources/sample-projects/junit-tests-master")
     )
 
-    ue.findUnits()
-        .forEach { println(it.identifier) }
-
-    val occ = JavaUnitOccurrenceExtractor(listOf(), listOf())
-    occ.findOccurrences("src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo/TestMyTestClass.java")
+    // todo DEBUG THIS -> it does not find all the tested classes
+    val testFile = "src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo2/TestController.java"
+    val occ = JavaUnitOccurrenceExtractor(ue.findUnits(), JUnitTestUnitExtractor().findTestUnits(testFile))
+    occ.findOccurrences(testFile).forEach { println(it.identifier) }
 }
 
 fun unitSample() {

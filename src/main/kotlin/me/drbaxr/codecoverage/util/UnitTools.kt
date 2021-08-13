@@ -2,7 +2,6 @@ package me.drbaxr.codecoverage.util
 
 import me.drbaxr.codecoverage.extractors.unit.CommentRemover
 import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
-import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
 class UnitTools {
@@ -55,6 +54,23 @@ class UnitTools {
                 '}' -> currentValue - 1
                 else -> currentValue
             }
+        }
+
+        // todo refactor this
+        fun isIdentifierPrefix(identifier: String, unitIdentifier: String): Boolean {
+            val splitUnitIdentifier = unitIdentifier.split('.')
+            val splitIdentifier = identifier.split('.')
+            var ok = true
+
+            if (splitIdentifier.size > splitUnitIdentifier.size)
+                ok = false
+
+            if (ok)
+                for (i in 0..splitIdentifier.lastIndex)
+                    if (splitUnitIdentifier[i] != splitIdentifier[i])
+                        ok = false
+
+            return ok
         }
     }
 }

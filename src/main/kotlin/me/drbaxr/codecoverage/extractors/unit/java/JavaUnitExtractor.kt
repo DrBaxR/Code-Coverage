@@ -12,6 +12,23 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
 
     private val classUnitNames: MutableList<String> = mutableListOf()
 
+    companion object {
+        fun getPackageName(fileLines: List<String>): String {
+            val commentRemover = JavaCommentRemover()
+            val nonCommentLines = commentRemover.removeCommentLines(fileLines)
+
+            var i = 0
+            while (nonCommentLines[i].second.trim() == "")
+                i++
+
+            val maybePackageLine = fileLines[nonCommentLines[i].first - 1].trim().replace(";", "")
+            return when (maybePackageLine.contains("package ")) {
+                true -> maybePackageLine.removePrefix("package ").trim()
+                false -> "" // TODO: rethink this because it makes no sense
+            }
+        }
+    }
+
     override fun findUnits(): List<CodeUnit> {
         val testFiles = testFileExtractor.findTestFiles()
         val sourceFiles = FileTools.getFilesWithExtension(projectPath, ".java", testFiles)
@@ -91,21 +108,6 @@ class JavaUnitExtractor(private val projectPath: String, private val testFileExt
             }
         }
     }.filter { !it.isEmpty() }
-
-    private fun getPackageName(fileLines: List<String>): String {
-        val commentRemover = JavaCommentRemover()
-        val nonCommentLines = commentRemover.removeCommentLines(fileLines)
-
-        var i = 0
-        while (nonCommentLines[i].second.trim() == "")
-            i++
-
-        val maybePackageLine = fileLines[nonCommentLines[i].first - 1].trim().replace(";", "")
-        return when (maybePackageLine.contains("package ")) {
-            true -> maybePackageLine.removePrefix("package ").trim()
-            false -> "" // TODO: rethink this because it makes no sense
-        }
-    }
 
     private fun getUnitName(unitHeader: String): String {
         return when {
