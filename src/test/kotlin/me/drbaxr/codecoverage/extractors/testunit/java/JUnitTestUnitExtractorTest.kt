@@ -1,4 +1,4 @@
-package me.drbaxr.codecoverage.extractors.testedunit.unit.java
+package me.drbaxr.codecoverage.extractors.testunit.java
 
 import me.drbaxr.codecoverage.models.CodeUnit
 import kotlin.test.Test

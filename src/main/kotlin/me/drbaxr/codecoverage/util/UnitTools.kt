@@ -2,6 +2,7 @@ package me.drbaxr.codecoverage.util
 
 import me.drbaxr.codecoverage.extractors.unit.CommentRemover
 import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
+import me.drbaxr.codecoverage.extractors.unit.java.JavaCommentRemover
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
 class UnitTools {
@@ -71,6 +72,21 @@ class UnitTools {
                         ok = false
 
             return ok
+        }
+
+        fun getJavaPackageName(fileLines: List<String>): String {
+            val commentRemover = JavaCommentRemover()
+            val nonCommentLines = commentRemover.removeCommentLines(fileLines)
+
+            var i = 0
+            while (nonCommentLines[i].second.trim() == "")
+                i++
+
+            val maybePackageLine = fileLines[nonCommentLines[i].first - 1].trim().replace(";", "")
+            return when (maybePackageLine.contains("package ")) {
+                true -> maybePackageLine.removePrefix("package ").trim()
+                false -> "" // TODO: rethink this because it makes no sense
+            }
         }
     }
 }

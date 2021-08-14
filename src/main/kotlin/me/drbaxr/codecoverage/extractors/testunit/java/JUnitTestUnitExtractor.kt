@@ -1,6 +1,6 @@
-package me.drbaxr.codecoverage.extractors.testedunit.unit.java
+package me.drbaxr.codecoverage.extractors.testunit.java
 
-import me.drbaxr.codecoverage.extractors.testedunit.unit.TestUnitExtractor
+import me.drbaxr.codecoverage.extractors.testunit.TestUnitExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaCommentRemover
 import me.drbaxr.codecoverage.extractors.unit.java.JavaMethodHeaderIdentifier
 import me.drbaxr.codecoverage.models.CodeUnit
