@@ -5,7 +5,6 @@ import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
 
-// TODO: add tests for this
 class JavaTestedUnitExtractor(allCodeUnits: List<CodeUnit>) :
     TestedUnitExtractor(allCodeUnits) {
 
