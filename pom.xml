@@ -96,6 +96,11 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>1.4.10</version>
         </dependency>
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>1.4.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -14,4 +14,7 @@
 # Maven
 log/
 target/
+
+# Code Coverage
 config/
+analysis/
