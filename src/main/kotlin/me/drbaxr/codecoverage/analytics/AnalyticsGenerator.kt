@@ -1,22 +1,22 @@
 package me.drbaxr.codecoverage.analytics
 
+import me.drbaxr.codecoverage.models.Analytics
 import me.drbaxr.codecoverage.models.CodeUnit
 
 class AnalyticsGenerator {
 
-    fun generate(allUnits: List<CodeUnit>, testedUnits: List<CodeUnit>) {
-        // TODO: check https://j2html.com/examples.html and make html
+    fun generate(allUnits: List<CodeUnit>, testedUnits: List<CodeUnit>): Analytics {
+        val analytics = Analytics(
+            testedUnits.size.toFloat() / allUnits.size.toFloat() * 100,
+            calculateLineCoverage(allUnits, testedUnits),
+        )
 
-//        println("All Units Found:")
-//        allUnits.forEach { println(it.identifier) }
-//
-//        println("\nTested Units Found:")
-//        testedUnits.forEach { println(it.identifier) }
+//        println("Code Coverage: ${testedUnits.size.toFloat() / allUnits.size.toFloat() * 100}%")
+//        println("Line Coverage: ${calculateLineCoverage(allUnits, testedUnits)}%")
 
-        println("Code Coverage: ${testedUnits.size.toFloat() / allUnits.size.toFloat() * 100}%")
-        println("Line Coverage: ${calculateLineCoverage(allUnits, testedUnits)}%")
+        HtmlGenerator().generate(allUnits, testedUnits, analytics)
 
-        HtmlGenerator().generate()
+        return analytics
     }
 
     private fun calculateLineCoverage(allUnits: List<CodeUnit>, testedUnits: List<CodeUnit>): Float {
@@ -25,21 +25,4 @@ class AnalyticsGenerator {
 
         return testedLines / totalTestableLines * 100
     }
-
-    private fun getFilesToUnitsMap(units: List<CodeUnit>): Map<String, Set<CodeUnit>> {
-        val filesToUnitsMap = mutableMapOf<String, MutableSet<CodeUnit>>()
-
-        units.forEach {
-            val unitsSet = filesToUnitsMap[it.hostFilePath]
-
-            if (unitsSet != null) {
-                unitsSet.add(it)
-            } else {
-                filesToUnitsMap[it.hostFilePath] = mutableSetOf()
-            }
-        }
-
-        return filesToUnitsMap
-    }
-
 }

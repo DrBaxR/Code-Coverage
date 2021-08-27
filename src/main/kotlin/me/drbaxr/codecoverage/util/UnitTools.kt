@@ -3,6 +3,7 @@ package me.drbaxr.codecoverage.util
 import me.drbaxr.codecoverage.extractors.unit.CommentRemover
 import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
 import me.drbaxr.codecoverage.extractors.unit.java.JavaCommentRemover
+import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
 class UnitTools {
@@ -87,6 +88,22 @@ class UnitTools {
                 true -> maybePackageLine.removePrefix("package ").trim()
                 false -> "" // TODO: rethink this because it makes no sense
             }
+        }
+
+        fun getFilesToUnitsMap(units: List<CodeUnit>): Map<String, Set<CodeUnit>> {
+            val filesToUnitsMap = mutableMapOf<String, MutableSet<CodeUnit>>()
+
+            units.forEach {
+                val unitsSet = filesToUnitsMap[it.hostFilePath]
+
+                if (unitsSet != null) {
+                    unitsSet.add(it)
+                } else {
+                    filesToUnitsMap[it.hostFilePath] = mutableSetOf()
+                }
+            }
+
+            return filesToUnitsMap
         }
     }
 }

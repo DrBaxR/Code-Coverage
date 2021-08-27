@@ -1,0 +1,53 @@
+body {
+    background: #0d1117;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.whitespace {
+    color: rgba(0, 0, 0, 0);
+}
+
+.file {
+    background: #6e76811a;
+    margin-top: 50px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.file-name {
+    padding: 10px;
+    color: #8b949e;
+    border-bottom: 1px solid #8b949e;
+}
+
+.file-lines-container {
+    padding: 10px;
+    border-radius: 5px;
+    background: #0d1117;
+}
+
+.file-line {
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
