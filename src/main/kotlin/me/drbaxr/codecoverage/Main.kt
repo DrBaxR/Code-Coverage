@@ -62,7 +62,7 @@ fun testedUnitSample() {
 }
 
 fun analyticsGeneratorSample() {
-    val projPath = "src/test/resources/sample-projects/Game-Master"
+    val projPath = "src/test/resources/sample-projects/junit-tests-master"
     val tfe = ManualTestFileExtractor(projPath)
     val ue = JavaUnitExtractor(
         projPath,

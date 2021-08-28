@@ -9,6 +9,7 @@ body {
 }
 
 .file {
+    color: rgba(255, 255, 255, 0.7);
     background: #6e76811a;
     margin-top: 50px;
     border: 1px solid gray;
@@ -22,13 +23,22 @@ body {
 }
 
 .file-lines-container {
-    padding: 10px;
+    padding: 10px 0;
     border-radius: 5px;
     background: #0d1117;
 }
 
 .file-line {
+    padding: 0 10px;
     font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.green {
+    background: rgba(46, 160, 67, 0.15);
+}
+
+.red {
+    background: rgba(248, 81, 73, 0.15);
 }
 
 ::-webkit-scrollbar {
