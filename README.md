@@ -1,9 +1,12 @@
-# Build
-```mvn clean install```
+# Code Coverage
+Tool that generates code coverage for a project without actually running tests for that project.
 
-# Run
-```java -jar target/code-coverage-1.0-SNAPSHOT-jar-with-dependencies.jar [args]```
+## How to Use
+- Get the JAR
+- Create files ```config/test-files.txt``` and ```config/ignored-test-files.txt``` in the folder where you have put the JAR
+- Specify test file and ignored test file patterns in those files (docs on that later)
+- Specify path to project
+- Run JAR
+- You'll find a ```analytics/index.html``` file where you put the jar. Just open it with any browser and BOOM!, there you'll be able to find all the information this tool has to offer  
 
-**This only works if there are no compiling errors**
-
-also contains various random repos i found on github (they can be found in the test resources). i don't own any of those
+**DISCLAIMER:** Also contains various random repos I found on GitHub (they can be found in the test resources, and are exclusively used for test cases). I don't own any of those.

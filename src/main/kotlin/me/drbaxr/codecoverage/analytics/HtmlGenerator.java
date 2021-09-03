@@ -21,8 +21,17 @@ import static j2html.TagCreator.*;
 public class HtmlGenerator {
 
     private final Logger logger = LoggerFactory.getLogger(HtmlGenerator.class);
+    private final List<CodeUnit> allUnits;
+    private final List<CodeUnit> testedUnits;
+    private final Analytics analytics;
 
-    public void generate(List<CodeUnit> allUnits, List<CodeUnit> testedUnits, Analytics analytics) {
+    public HtmlGenerator(List<CodeUnit> allUnits, List<CodeUnit> testedUnits, Analytics analytics) {
+        this.allUnits = allUnits;
+        this.testedUnits = testedUnits;
+        this.analytics = analytics;
+    }
+
+    public void generate() {
         logger.info("Generating HTML...");
 
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(allUnits);
@@ -32,10 +41,13 @@ public class HtmlGenerator {
             getTestedUnitHeatMap(file, FileTools.Companion.getFileLines(file).size(), allUnits, testedUnits);
         });
 
-        // TODO: refactor this shit
+        createAnalyticsFiles(generateHtml(fileNames), "./analytics");
+    }
+
+    private ContainerTag generateHtml(Set<String> fileNames) {
         // TODO: also include all units count and tested units count
         // TODO: also add a progress bar thing to show coverage
-        ContainerTag html = html(
+        return html(
             head(
                 title("Project Code Coverage"),
                 link().withRel("stylesheet").withHref("styles.css")
@@ -48,48 +60,49 @@ public class HtmlGenerator {
                 ),
                 div(
                     attrs(".files-list"),
-                    each(fileNames, fileName -> {
-                            int[] heatmap = getTestedUnitHeatMap(fileName, FileTools.Companion.getFileLines(fileName).size(), allUnits, testedUnits);
-                            String[] fileLines = FileTools.Companion.getFileLines(fileName).toArray(String[]::new);
-                            List<Pair<Integer, String>> indexedFileLines = new ArrayList<>();
-                            for (int i = 0; i < fileLines.length; ++i) {
-                                indexedFileLines.add(new Pair<>(i + 1, fileLines[i]));
-                            }
-
-
-                            return div(
-                                attrs(".file"),
-                                div(
-                                    attrs(".file-name"),
-                                    fileName
-                                ),
-                                div(
-                                    attrs(".file-lines-container"),
-                                    each(indexedFileLines, indexedLine -> {
-                                            String classes = ".file-line";
-
-                                            if (heatmap[indexedLine.getFirst()] < 0) {
-                                                classes += ".red";
-                                            } else if (heatmap[indexedLine.getFirst()] > 0) {
-                                                classes += ".green";
-                                            }
-
-                                            return div(
-                                                attrs(classes), // TODO: add a class to it if it's tested in smt
-                                                span(attrs(".whitespace"), getLineWhitespace(indexedLine.getSecond())),
-                                                span(indexedLine.getSecond().trim())
-                                            );
-                                        }
-                                    )
-                                )
-                            );
-                        }
-                    )
+                    each(fileNames, this::generateFilesListHtml)
                 )
             )
         );
+    }
 
-        createAnalyticsFiles(html, "./analytics");
+    private ContainerTag generateFilesListHtml(String fileName) {
+        int[] heatmap = getTestedUnitHeatMap(fileName, FileTools.Companion.getFileLines(fileName).size(), allUnits, testedUnits);
+        String[] fileLines = FileTools.Companion.getFileLines(fileName).toArray(String[]::new);
+        List<Pair<Integer, String>> indexedFileLines = new ArrayList<>();
+        for (int i = 0; i < fileLines.length; ++i) {
+            indexedFileLines.add(new Pair<>(i + 1, fileLines[i]));
+        }
+
+
+        return div(
+            attrs(".file"),
+            div(
+                attrs(".file-name"),
+                fileName
+            ),
+            div(
+                attrs(".file-lines-container"),
+                each(indexedFileLines, indexedLine -> generateFileLineHtml(indexedLine, heatmap)
+                )
+            )
+        );
+    }
+
+    private ContainerTag generateFileLineHtml(Pair<Integer, String> indexedLine, int[] heatmap) {
+        String classes = ".file-line";
+
+        if (heatmap[indexedLine.getFirst()] < 0) {
+            classes += ".red";
+        } else if (heatmap[indexedLine.getFirst()] > 0) {
+            classes += ".green";
+        }
+
+        return div(
+            attrs(classes),
+            span(attrs(".whitespace"), getLineWhitespace(indexedLine.getSecond())),
+            span(indexedLine.getSecond().trim())
+        );
     }
 
     private void createAnalyticsFiles(ContainerTag html, String folderPath) {

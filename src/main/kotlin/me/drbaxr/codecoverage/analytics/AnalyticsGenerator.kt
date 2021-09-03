@@ -11,10 +11,7 @@ class AnalyticsGenerator {
             calculateLineCoverage(allUnits, testedUnits),
         )
 
-//        println("Code Coverage: ${testedUnits.size.toFloat() / allUnits.size.toFloat() * 100}%")
-//        println("Line Coverage: ${calculateLineCoverage(allUnits, testedUnits)}%")
-
-        HtmlGenerator().generate(allUnits, testedUnits, analytics)
+        HtmlGenerator(allUnits, testedUnits, analytics).generate()
 
         return analytics
     }

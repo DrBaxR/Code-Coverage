@@ -12,6 +12,7 @@ fun main() {
 //    unitSample()
 //    testUnitSample()
 //    testedUnitSample()
+    // TODO: IMPORTANT! - bug in pathExpression!!! look more into the TestSpiral.java incident
     analyticsGeneratorSample()
 }
 
@@ -63,7 +64,7 @@ fun testedUnitSample() {
 }
 
 fun analyticsGeneratorSample() {
-    val projPath = "src/test/resources/sample-projects/Game-master"
+    val projPath = "src/test/resources/sample-projects/junit-tests-master"
     val tfe = ManualTestFileExtractor(projPath)
     val ue = JavaUnitExtractor(
         projPath,
