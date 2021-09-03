@@ -1,6 +1,8 @@
 package me.drbaxr.codecoverage.analytics;
 
 import j2html.tags.ContainerTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import kotlin.Pair;
 import kotlin.ranges.IntRange;
 import me.drbaxr.codecoverage.models.Analytics;
@@ -8,7 +10,9 @@ import me.drbaxr.codecoverage.models.CodeUnit;
 import me.drbaxr.codecoverage.util.FileTools;
 import me.drbaxr.codecoverage.util.UnitTools;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,9 +20,10 @@ import static j2html.TagCreator.*;
 
 public class HtmlGenerator {
 
+    private final Logger logger = LoggerFactory.getLogger(HtmlGenerator.class);
+
     public void generate(List<CodeUnit> allUnits, List<CodeUnit> testedUnits, Analytics analytics) {
-        // TODO: check https://j2html.com/examples.html and make html
-        System.out.println("Generating HTML...");
+        logger.info("Generating HTML...");
 
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(allUnits);
         Set<String> fileNames = filesToUnitsMap.keySet();
@@ -84,20 +89,47 @@ public class HtmlGenerator {
             )
         );
 
+        createAnalyticsFiles(html, "./analytics");
+    }
+
+    private void createAnalyticsFiles(ContainerTag html, String folderPath) {
+        File analyticsFolder = new File(folderPath);
+        if (analyticsFolder.mkdir()) {
+            logger.info("Created " + folderPath + " folder");
+        }
+
         try {
-            // TODO: also create css file in resources and create it if it does not exist
-            // TODO: also, not sure what happens if no index.html file exists
-            String fileName = "./analytics/index.html";
-            FileWriter writer = new FileWriter(fileName);
-
-            writer.write(html.renderFormatted());
-
-            writer.close();
-
-            System.out.println("Successfully generated ./analytics/index.html file!");
-        } catch (Exception e) {
+            generateHtmlFile(html, folderPath);
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            generateCssFile(folderPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void generateHtmlFile(ContainerTag html, String folderPath) throws IOException {
+        String fileName = folderPath + "/index.html";
+        FileWriter writer = new FileWriter(fileName);
+
+        writer.write(html.renderFormatted());
+
+        writer.close();
+        logger.info("Generated " + fileName + " file");
+    }
+
+    private void generateCssFile(String folderPath) throws IOException {
+        String fileName = folderPath + "/styles.css";
+        String content = FileTools.Companion.getFileFromResourceContent("styles.css");
+        FileWriter writer = new FileWriter(fileName);
+
+        writer.write(content);
+
+        writer.close();
+        logger.info("Generated " + fileName + " file");
     }
 
     private int[] getTestedUnitHeatMap(String file, int linesNumber, List<CodeUnit> allUnits, List<CodeUnit> testedUnits) {

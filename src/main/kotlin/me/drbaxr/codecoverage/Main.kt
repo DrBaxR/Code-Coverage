@@ -6,6 +6,7 @@ import me.drbaxr.codecoverage.extractors.testunit.java.JUnitTestUnitExtractor
 import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
 import me.drbaxr.codecoverage.models.CodeUnit
+import me.drbaxr.codecoverage.util.FileTools
 
 fun main() {
 //    unitSample()
@@ -62,7 +63,7 @@ fun testedUnitSample() {
 }
 
 fun analyticsGeneratorSample() {
-    val projPath = "src/test/resources/sample-projects/junit-tests-master"
+    val projPath = "src/test/resources/sample-projects/Game-master"
     val tfe = ManualTestFileExtractor(projPath)
     val ue = JavaUnitExtractor(
         projPath,

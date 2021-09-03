@@ -2,6 +2,9 @@ package me.drbaxr.codecoverage.util
 
 import me.drbaxr.codecoverage.expression.PathExpression
 import java.io.File
+import java.io.InputStream
+import java.io.StringWriter
+import java.lang.IllegalArgumentException
 import java.util.*
 
 class FileTools {
@@ -46,6 +49,20 @@ class FileTools {
             val filesWithExtension = allFilesExpressions.filter { it.matches("**/*$extension") }
 
             return filesWithExtension.map { it.path }.filter { !ignoredFiles.contains(it) }
+        }
+
+        fun getFileFromResourceContent(fileName: String): String {
+            val classLoader = javaClass.classLoader
+            val inputStream = classLoader.getResourceAsStream(fileName)
+                ?: throw IllegalArgumentException("File not found: $fileName")
+
+            val scanner = Scanner(inputStream).useDelimiter("\\A")
+
+            return if (scanner.hasNext()) {
+                scanner.next()
+            } else {
+                ""
+            }
         }
     }
 }
