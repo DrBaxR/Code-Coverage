@@ -119,4 +119,16 @@ class PathExpressionTest {
         }
     }
 
+    @Test
+    fun `test compound expression real case`() {
+        pathExpression = PathExpression("src/test/java/de/syngenio/robot/TestSpiral.java")
+
+        with(pathExpression) {
+            assertEquals(matches("**/TestSpiral.java"), true)
+            assertEquals(matches("**/*Spiral.java"), true)
+            assertEquals(matches("**/TestSpiral*"), true)
+            assertEquals(matches("**/*Spiral*"), true)
+        }
+    }
+
 }

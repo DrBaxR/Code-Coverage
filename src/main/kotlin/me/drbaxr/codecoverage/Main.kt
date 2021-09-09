@@ -12,7 +12,6 @@ fun main() {
 //    unitSample()
 //    testUnitSample()
 //    testedUnitSample()
-    // TODO: IMPORTANT! - bug in pathExpression!!! look more into the TestSpiral.java incident
     analyticsGeneratorSample()
 }
 

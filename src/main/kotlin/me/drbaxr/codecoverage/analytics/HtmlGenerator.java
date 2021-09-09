@@ -32,7 +32,7 @@ public class HtmlGenerator {
     }
 
     public void generate() {
-        logger.info("Generating HTML...");
+        logger.info("Generating HTML report...");
 
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(allUnits);
         Set<String> fileNames = filesToUnitsMap.keySet();
