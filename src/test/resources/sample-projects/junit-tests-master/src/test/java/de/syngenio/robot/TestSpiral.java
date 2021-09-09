@@ -19,7 +19,7 @@ public class TestSpiral {
 	public void setUp() {
 		_spiral = new Spiral(_robot);
 	}
-	
+
 	@Test
 	public void assureThatRobotWalksSpiral() {
 		InOrder inorder = inOrder(_robot);

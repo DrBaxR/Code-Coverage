@@ -37,9 +37,7 @@ public class HtmlGenerator {
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(allUnits);
         Set<String> fileNames = filesToUnitsMap.keySet();
 
-        filesToUnitsMap.keySet().forEach(file -> {
-            getTestedUnitHeatMap(file, FileTools.Companion.getFileLines(file).size(), allUnits, testedUnits);
-        });
+        filesToUnitsMap.keySet().forEach(file -> getTestedUnitHeatMap(file, FileTools.Companion.getFileLines(file).size(), allUnits, testedUnits));
 
         createAnalyticsFiles(generateHtml(fileNames), "./analytics");
     }
@@ -55,8 +53,24 @@ public class HtmlGenerator {
             body(
                 div(
                     attrs(".summary"),
-                    h2("Code Coverage: " + Math.round(analytics.getCodeCoverage() * 100) / 100f + "%"),
-                    h2("Line Coverage: " + Math.round(analytics.getLineCoverage() * 100) / 100f + "%")
+                    h2(
+                        attrs(".header"),
+                        "Code Coverage: " + Math.round(analytics.getCodeCoverage() * 100) / 100f + "%"
+                    ),
+                    div(
+                        attrs(".progress-bar"),
+                        div(attrs(".progress"))
+                            .withStyle("width: " + Math.round(analytics.getCodeCoverage()) + "%;")
+                    ),
+                    h2(
+                        attrs(".header"),
+                        "Line Coverage: " + Math.round(analytics.getLineCoverage() * 100) / 100f + "%"
+                    ),
+                    div(
+                        attrs(".progress-bar"),
+                        div(attrs(".progress"))
+                            .withStyle("width: " + Math.round(analytics.getLineCoverage()) + "%;")
+                    )
                 ),
                 div(
                     attrs(".files-list"),
