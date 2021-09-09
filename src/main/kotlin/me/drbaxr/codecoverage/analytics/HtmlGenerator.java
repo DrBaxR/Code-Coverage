@@ -44,7 +44,6 @@ public class HtmlGenerator {
 
     private ContainerTag generateHtml(Set<String> fileNames) {
         // TODO: also include all units count and tested units count
-        // TODO: also add a progress bar thing to show coverage
         return html(
             head(
                 title("Project Code Coverage"),
