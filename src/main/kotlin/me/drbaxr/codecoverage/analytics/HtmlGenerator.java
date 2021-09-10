@@ -69,8 +69,7 @@ public class HtmlGenerator {
                         div(attrs(".progress"))
                             .withStyle("width: " + Math.round(analytics.getLineCoverage()) + "%;")
                     ),
-                    generateUnitsTreeList("Found Testable Units (" + allUnits.size() + ")", allUnits),
-                    generateUnitsTreeList("Found Tested Units (" + testedUnits.size() + ")", testedUnits)
+                    generateUnitsTreeList("Found Testable Units (" + allUnits.size() + ")", allUnits, testedUnits)
                 ),
                 div(
                     attrs(".files-list"),
@@ -104,14 +103,15 @@ public class HtmlGenerator {
         );
     }
 
-    private ContainerTag generateUnitsTreeList(String listRootText, List<CodeUnit> units) {
+    // TODO: maybe make tree reflect files tree
+    private ContainerTag generateUnitsTreeList(String listRootText, List<CodeUnit> units, List<CodeUnit> testedUnits) {
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(units);
 
         return ul(
             attrs(".tree"),
             li(
                 span(
-                    attrs(".caret"),
+                    attrs(".caret.root"),
                     listRootText
                 ),
                 ul(
@@ -119,11 +119,20 @@ public class HtmlGenerator {
                     each(filesToUnitsMap, fileToUnits -> li(
                         span(
                             attrs(".caret"),
-                            fileToUnits.getKey()
+                            fileToUnits.getKey() + " (" + fileToUnits.getValue().size() + ")" // TODO: Check why some are empty
                         ),
                         ul(
                             attrs(".nested"),
-                            each(fileToUnits.getValue(), unit -> li(unit.getIdentifier()))
+                            each(fileToUnits.getValue(), unit -> li(
+                                attrs(
+                                    testedUnits.stream()
+                                        .filter(u -> u.getIdentifier().equals(unit.getIdentifier()))
+                                        .findFirst()
+                                        .map(u -> ".c-green")
+                                        .orElse(".c-red")
+                                ),
+                                unit.getIdentifier())
+                            )
                         )
                     ))
                 )
@@ -193,6 +202,7 @@ public class HtmlGenerator {
         logger.info("Generated " + fileName + " file");
     }
 
+    // TODO: make ALL tested lines green - will indicate tested lines metric
     private int[] getTestedUnitHeatMap(String file, int linesNumber, List<CodeUnit> allUnits, List<CodeUnit> testedUnits) {
         List<CodeUnit> fileAllUnits = allUnits.stream()
             .filter(unit -> unit.getHostFilePath().equals(file)).collect(Collectors.toList());

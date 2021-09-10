@@ -48,13 +48,13 @@ public class TestController {
 		when(_sensor.isMotorBlocked()).thenReturn(false);
 		// 1. bright, too warm
 		when(_sensor.getBrightness()).thenReturn(15);
-		when(_sensor.getTemperature()).thenReturn(30);
+//		when(_sensor.getTemperature()).thenReturn(30);
 		_controller.singleDecision();
 		verify(_actor).moveMotor(-10);
 
 		// 2. bright, too cold
 		when(_sensor.getBrightness()).thenReturn(15);
-		when(_sensor.getTemperature()).thenReturn(15);
+//		when(_sensor.getTemperature()).thenReturn(15);
 		_controller.singleDecision();
 		verify(_actor).moveMotor(5);
 

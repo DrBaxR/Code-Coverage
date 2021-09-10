@@ -77,15 +77,30 @@ body {
     background: #00b276;
 }
 
+.c-green {
+    color: #00b276;
+}
+
+.c-red {
+    color: #e53935;
+}
+
 /* Remove default bullets */
-ul, #tree {
+ul, .tree {
     list-style-type: none;
 }
 
+
+
 /* Remove margins and padding from the parent ul */
-#tree {
-    margin: 0;
+.tree {
+    margin: 24px 0 0 0;
     padding: 0;
+}
+
+.tree .root {
+    font-size: 24px;
+    font-weight: bold;
 }
 
 /* Style the caret/arrow */
