@@ -43,7 +43,6 @@ public class HtmlGenerator {
     }
 
     private ContainerTag generateHtml(Set<String> fileNames) {
-        // TODO: also include all units count and tested units count
         return html(
             head(
                 title("Project Code Coverage"),
@@ -69,13 +68,16 @@ public class HtmlGenerator {
                         attrs(".progress-bar"),
                         div(attrs(".progress"))
                             .withStyle("width: " + Math.round(analytics.getLineCoverage()) + "%;")
-                    )
+                    ),
+                    generateUnitsTreeList("Found Testable Units (" + allUnits.size() + ")", allUnits),
+                    generateUnitsTreeList("Found Tested Units (" + testedUnits.size() + ")", testedUnits)
                 ),
                 div(
                     attrs(".files-list"),
                     each(fileNames, this::generateFilesListHtml)
                 )
-            )
+            ),
+            script().withSrc("main.js")
         );
     }
 
@@ -97,6 +99,33 @@ public class HtmlGenerator {
             div(
                 attrs(".file-lines-container"),
                 each(indexedFileLines, indexedLine -> generateFileLineHtml(indexedLine, heatmap)
+                )
+            )
+        );
+    }
+
+    private ContainerTag generateUnitsTreeList(String listRootText, List<CodeUnit> units) {
+        Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(units);
+
+        return ul(
+            attrs(".tree"),
+            li(
+                span(
+                    attrs(".caret"),
+                    listRootText
+                ),
+                ul(
+                    attrs(".nested"),
+                    each(filesToUnitsMap, fileToUnits -> li(
+                        span(
+                            attrs(".caret"),
+                            fileToUnits.getKey()
+                        ),
+                        ul(
+                            attrs(".nested"),
+                            each(fileToUnits.getValue(), unit -> li(unit.getIdentifier()))
+                        )
+                    ))
                 )
             )
         );
@@ -131,7 +160,13 @@ public class HtmlGenerator {
         }
 
         try {
-            generateCssFile(folderPath);
+            generateResourceFile(folderPath, "styles.css");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            generateResourceFile(folderPath, "main.js");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,9 +182,9 @@ public class HtmlGenerator {
         logger.info("Generated " + fileName + " file");
     }
 
-    private void generateCssFile(String folderPath) throws IOException {
-        String fileName = folderPath + "/styles.css";
-        String content = FileTools.Companion.getFileFromResourceContent("styles.css");
+    private void generateResourceFile(String folderPath, String resourcePath) throws IOException {
+        String fileName = folderPath + "/" + resourcePath;
+        String content = FileTools.Companion.getFileFromResourceContent(resourcePath);
         FileWriter writer = new FileWriter(fileName);
 
         writer.write(content);
