@@ -80,5 +80,5 @@ fun analyticsGeneratorSample() {
     }
 
     val ag = AnalyticsGenerator()
-    ag.generate(units, testedUnits.toList())
+    ag.generate(projPath, units, testedUnits.toList())
 }

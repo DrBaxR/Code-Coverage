@@ -5,13 +5,13 @@ import me.drbaxr.codecoverage.models.CodeUnit
 
 class AnalyticsGenerator {
 
-    fun generate(allUnits: List<CodeUnit>, testedUnits: List<CodeUnit>): Analytics {
+    fun generate(projectPath: String, allUnits: List<CodeUnit>, testedUnits: List<CodeUnit>): Analytics {
         val analytics = Analytics(
             testedUnits.size.toFloat() / allUnits.size.toFloat() * 100,
             calculateLineCoverage(allUnits, testedUnits),
         )
 
-        HtmlGenerator(allUnits, testedUnits, analytics).generate()
+        HtmlGenerator(projectPath, allUnits, testedUnits, analytics).generate()
 
         return analytics
     }

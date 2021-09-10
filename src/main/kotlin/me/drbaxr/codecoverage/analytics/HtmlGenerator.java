@@ -21,11 +21,14 @@ import static j2html.TagCreator.*;
 public class HtmlGenerator {
 
     private final Logger logger = LoggerFactory.getLogger(HtmlGenerator.class);
+
+    private final String projectPath;
     private final List<CodeUnit> allUnits;
     private final List<CodeUnit> testedUnits;
     private final Analytics analytics;
 
-    public HtmlGenerator(List<CodeUnit> allUnits, List<CodeUnit> testedUnits, Analytics analytics) {
+    public HtmlGenerator(String projectPath, List<CodeUnit> allUnits, List<CodeUnit> testedUnits, Analytics analytics) {
+        this.projectPath = projectPath;
         this.allUnits = allUnits;
         this.testedUnits = testedUnits;
         this.analytics = analytics;
@@ -93,7 +96,7 @@ public class HtmlGenerator {
             attrs(".file"),
             div(
                 attrs(".file-name"),
-                fileName
+                fileName.replaceFirst(projectPath + "/", "")
             ),
             div(
                 attrs(".file-lines-container"),
@@ -119,7 +122,7 @@ public class HtmlGenerator {
                     each(filesToUnitsMap, fileToUnits -> li(
                         span(
                             attrs(".caret"),
-                            fileToUnits.getKey() + " (" + fileToUnits.getValue().size() + ")" // TODO: Check why some are empty
+                            fileToUnits.getKey().replaceFirst(projectPath + "/", "") + " (" + fileToUnits.getValue().size() + ")" // TODO: Check why some are empty
                         ),
                         ul(
                             attrs(".nested"),
