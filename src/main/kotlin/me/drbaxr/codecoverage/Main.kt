@@ -1,84 +1,79 @@
 package me.drbaxr.codecoverage
 
+import com.google.gson.Gson
 import me.drbaxr.codecoverage.analytics.AnalyticsGenerator
-import me.drbaxr.codecoverage.extractors.testedunit.JavaTestedUnitExtractor
-import me.drbaxr.codecoverage.extractors.testunit.java.JUnitTestUnitExtractor
+import me.drbaxr.codecoverage.extractors.testedunit.TestedUnitExtractor
 import me.drbaxr.codecoverage.extractors.testfile.ManualTestFileExtractor
-import me.drbaxr.codecoverage.extractors.unit.java.JavaUnitExtractor
+import me.drbaxr.codecoverage.extractors.testfile.TestFileExtractor
+import me.drbaxr.codecoverage.extractors.unit.UnitExtractor
 import me.drbaxr.codecoverage.models.CodeUnit
+import me.drbaxr.codecoverage.models.Configuration
 import me.drbaxr.codecoverage.util.FileTools
+import org.slf4j.LoggerFactory
+import java.lang.Exception
 
 fun main() {
-//    unitSample()
-//    testUnitSample()
-//    testedUnitSample()
-    analyticsGeneratorSample()
-}
-
-fun unitSample() {
-//    val test = JavaUnitExtractor(
-//        "src/test/resources/unit-extractor/java/case2",
-//        ManualTestFileExtractor("src/test/resources/unit-extractor/java/case1")
-//    )
-
-//    val test = JavaUnitExtractor(
-//        "src/test/resources/unit-extractor/java/case2",
-//        ManualTestFileExtractor(
-//            "src/test/resources/unit-extractor/java/case2",
-//            "src/test/resources/unit-extractor/java/case2/config/test-files.txt",
-//            "src/test/resources/unit-extractor/java/case2/config/ignored-test-files.txt"
-//        )
-//    )
-
-    val test = JavaUnitExtractor(
-        "src/test/resources/sample-projects/Game-master",
-        ManualTestFileExtractor("src/test/resources/sample-projects/Game-master")
+    val config = Gson().fromJson(
+        FileTools.getFileLines("./config/config.json").fold("") { acc, s -> "$acc$s" },
+        Configuration::class.java
     )
 
-//    val test = JavaUnitExtractor(
-//        "src/test/resources/sample-projects/junit-tests-master",
-//        ManualTestFileExtractor("src/test/resources/sample-projects/junit-tests-master")
-//    )
-
-    val units = test.findUnits()
-    units.forEach {
-        println(it.identifier)
-    }
+    run(config)
 }
 
-fun testUnitSample() {
-    val extractor = JUnitTestUnitExtractor()
-    extractor.findTestUnits("src/test/resources/test-unit-extractor/junit/Found.java").forEach { println(it) }
-}
+fun run(config: Configuration) {
+    val logger = LoggerFactory.getLogger("main")
 
-fun testedUnitSample() {
-    val ue = JavaUnitExtractor(
-        "src/test/resources/sample-projects/junit-tests-master",
-        ManualTestFileExtractor("src/test/resources/sample-projects/junit-tests-master")
+    // extract units
+    val testFileExtractor: TestFileExtractor = ManualTestFileExtractor(
+        config.projectPath,
+        config.testFilesPath ?: "config/test-files.txt",
+        config.ignoredTestFilesPath ?: "config/ignored-test-files.txt"
     )
 
-    val testFile = "src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo3/TestController.java"
-    val occ = JavaTestedUnitExtractor(ue.findUnits())
-    occ.findTestedUnits(testFile).forEach { println(it.identifier) }
-}
-
-fun analyticsGeneratorSample() {
-    val projPath = "src/test/resources/sample-projects/junit-tests-master"
-    val tfe = ManualTestFileExtractor(projPath)
-    val ue = JavaUnitExtractor(
-        projPath,
-        tfe
-    )
-    val units = ue.findUnits()
-    val testFiles = tfe.findTestFiles().map { "$projPath/$it" }
-
-    val testedUnits = mutableSetOf<CodeUnit>()
-    val occ = JavaTestedUnitExtractor(ue.findUnits())
-    testFiles.forEach {
-        val testedFromFile = occ.findTestedUnits(it)
-        testedFromFile.forEach { unit -> testedUnits.add(unit) }
+    // try creating unit extractor
+    val possibleUnitExtractor: Any
+    try {
+        val unitExtractorClass = Class.forName(config.unitExtractor)
+        val unitExtractorConstructor = unitExtractorClass.getConstructor(String::class.java, TestFileExtractor::class.java)
+        possibleUnitExtractor = unitExtractorConstructor.newInstance(config.projectPath, testFileExtractor)
+    } catch (e: Exception) {
+        logger.error("Specified unit extractor is invalid")
+        return
     }
 
-    val ag = AnalyticsGenerator()
-    ag.generate(projPath, units, testedUnits.toList())
+    if (possibleUnitExtractor is UnitExtractor) {
+        val units = possibleUnitExtractor.findUnits()
+
+        // extract tested
+        val testFiles = testFileExtractor.findTestFiles().map { "${config.projectPath}/$it" }
+        val testedUnits = mutableSetOf<CodeUnit>()
+
+        // try creating tested unit extractor
+        val possibleTestedUnitExtractor: Any
+        try {
+            val testedUnitExtractorClass = Class.forName(config.testedUnitExtractor)
+            val testedUnitExtractorConstructor = testedUnitExtractorClass.getConstructor(List::class.java)
+            possibleTestedUnitExtractor = testedUnitExtractorConstructor.newInstance(units)
+        } catch (e: Exception) {
+            logger.error("Specified tested unit extractor is invalid")
+            return
+        }
+
+        if (possibleTestedUnitExtractor is TestedUnitExtractor) {
+            testFiles.forEach {
+                val testedFromFile = possibleTestedUnitExtractor.findTestedUnits(it)
+                testedFromFile.forEach { unit -> testedUnits.add(unit) }
+            }
+        } else {
+            logger.error("Specified tested unit extractor is not a tested unit extractor")
+        }
+
+        // generate
+        val ag = AnalyticsGenerator()
+        ag.generate(config.projectPath, units, testedUnits.toList())
+    } else {
+        logger.error("Specified unit extractor is not a unit extractor")
+        return
+    }
 }
