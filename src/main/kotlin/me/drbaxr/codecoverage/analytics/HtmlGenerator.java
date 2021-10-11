@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 import static j2html.TagCreator.*;
 
+// TODO: does not see first unit of each file!!
+// TODO: Make it not detect interface methods as units
 public class HtmlGenerator {
 
     private final Logger logger = LoggerFactory.getLogger(HtmlGenerator.class);
@@ -143,6 +145,7 @@ public class HtmlGenerator {
         );
     }
 
+    // TODO: color whole unit green
     private ContainerTag generateFileLineHtml(Pair<Integer, String> indexedLine, int[] heatmap) {
         String classes = ".file-line";
 
