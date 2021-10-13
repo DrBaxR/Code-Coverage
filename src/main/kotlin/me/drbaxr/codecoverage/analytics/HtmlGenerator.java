@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 import static j2html.TagCreator.*;
 
-// TODO: does not see first unit of each file!!
-// TODO: Make it not detect interface methods as units
 public class HtmlGenerator {
 
     private final Logger logger = LoggerFactory.getLogger(HtmlGenerator.class);
@@ -108,7 +106,6 @@ public class HtmlGenerator {
         );
     }
 
-    // TODO: maybe make tree reflect files tree
     private ContainerTag generateUnitsTreeList(String listRootText, List<CodeUnit> units, List<CodeUnit> testedUnits) {
         Map<String, Set<CodeUnit>> filesToUnitsMap = UnitTools.Companion.getFilesToUnitsMap(units);
 
@@ -124,7 +121,7 @@ public class HtmlGenerator {
                     each(filesToUnitsMap, fileToUnits -> li(
                         span(
                             attrs(".caret"),
-                            fileToUnits.getKey().replaceFirst(projectPath + "/", "") + " (" + fileToUnits.getValue().size() + ")" // TODO: Check why some are empty
+                            fileToUnits.getKey().replaceFirst(projectPath + "/", "") + " (" + fileToUnits.getValue().size() + ")"
                         ),
                         ul(
                             attrs(".nested"),
@@ -142,23 +139,6 @@ public class HtmlGenerator {
                     ))
                 )
             )
-        );
-    }
-
-    // TODO: color whole unit green
-    private ContainerTag generateFileLineHtml(Pair<Integer, String> indexedLine, int[] heatmap) {
-        String classes = ".file-line";
-
-        if (heatmap[indexedLine.getFirst()] < 0) {
-            classes += ".red";
-        } else if (heatmap[indexedLine.getFirst()] > 0) {
-            classes += ".green";
-        }
-
-        return div(
-            attrs(classes),
-            span(attrs(".whitespace"), getLineWhitespace(indexedLine.getSecond())),
-            span(indexedLine.getSecond().trim())
         );
     }
 
@@ -187,6 +167,22 @@ public class HtmlGenerator {
         }
     }
 
+    private ContainerTag generateFileLineHtml(Pair<Integer, String> indexedLine, int[] heatmap) {
+        String classes = ".file-line";
+
+        if (heatmap[indexedLine.getFirst()] < 0) {
+            classes += ".red";
+        } else if (heatmap[indexedLine.getFirst()] > 0) {
+            classes += ".green";
+        }
+
+        return div(
+            attrs(classes),
+            span(attrs(".whitespace"), getLineWhitespace(indexedLine.getSecond())),
+            span(indexedLine.getSecond().trim())
+        );
+    }
+
     private void generateHtmlFile(ContainerTag html, String folderPath) throws IOException {
         String fileName = folderPath + "/index.html";
         FileWriter writer = new FileWriter(fileName);
@@ -208,7 +204,6 @@ public class HtmlGenerator {
         logger.info("Generated " + fileName + " file");
     }
 
-    // TODO: make ALL tested lines green - will indicate tested lines metric
     private int[] getTestedUnitHeatMap(String file, int linesNumber, List<CodeUnit> allUnits, List<CodeUnit> testedUnits) {
         List<CodeUnit> fileAllUnits = allUnits.stream()
             .filter(unit -> unit.getHostFilePath().equals(file)).collect(Collectors.toList());
@@ -220,12 +215,14 @@ public class HtmlGenerator {
 
         fileAllUnits.forEach(unit -> {
             IntRange linesRange = unit.getLinesRange();
-            heatmap[linesRange.getFirst()] = -1;
+
+            linesRange.forEach(lineIndex -> heatmap[lineIndex] = -1);
         });
 
         fileTestedUnits.forEach(unit -> {
             IntRange linesRange = unit.getLinesRange();
-            heatmap[linesRange.getFirst()] = 1;
+
+            linesRange.forEach(lineIndex -> heatmap[lineIndex] = 1);
         });
 
 

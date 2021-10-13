@@ -21,19 +21,15 @@ class JavaUnitExtractorAST(private val projectPath: String, private val testFile
             val methodDeclarations = JavaASTParser.parse(fileSource)
             val packageName = UnitTools.getJavaPackageName(fileLines)
 
-            // TODO: somehow find out where it starts and where it ends
-            // get current class name
-            // make identifier
-
             methodDeclarations.map {
                 val method = it.first
                 val startLine = it.second
 
-                var braces: Pair<Int, Int>?
-                try {
-                    braces = UnitTools.findMatchingCurlyBrace("${projectPath}/${filePath}", startLine - 1)
+                val braces: Pair<Int, Int>? = try {
+                    UnitTools.findMatchingCurlyBrace("${projectPath}/${filePath}", startLine)
                 } catch (e: StartingBraceNotFoundException) {
-                    braces = Pair(startLine, startLine)
+                    // this shouldn't happen if method has a body !
+                    Pair(startLine - 1, startLine - 1)
                 }
 
                 var className = ""

@@ -24,14 +24,12 @@ fun main() {
 fun run(config: Configuration) {
     val logger = LoggerFactory.getLogger("main")
 
-    // extract units
     val testFileExtractor: TestFileExtractor = ManualTestFileExtractor(
         config.projectPath,
         config.testFilesPath ?: "config/test-files.txt",
         config.ignoredTestFilesPath ?: "config/ignored-test-files.txt"
     )
 
-    // try creating unit extractor
     val possibleUnitExtractor: Any
     try {
         val unitExtractorClass = Class.forName(config.unitExtractor)
@@ -45,11 +43,9 @@ fun run(config: Configuration) {
     if (possibleUnitExtractor is UnitExtractor) {
         val units = possibleUnitExtractor.findUnits()
 
-        // extract tested
         val testFiles = testFileExtractor.findTestFiles().map { "${config.projectPath}/$it" }
         val testedUnits = mutableSetOf<CodeUnit>()
 
-        // try creating tested unit extractor
         val possibleTestedUnitExtractor: Any
         try {
             val testedUnitExtractorClass = Class.forName(config.testedUnitExtractor)
@@ -69,7 +65,6 @@ fun run(config: Configuration) {
             logger.error("Specified tested unit extractor is not a tested unit extractor")
         }
 
-        // generate
         val ag = AnalyticsGenerator()
         ag.generate(config.projectPath, units, testedUnits.toList())
     } else {
