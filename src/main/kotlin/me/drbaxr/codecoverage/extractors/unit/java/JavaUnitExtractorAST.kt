@@ -35,11 +35,11 @@ class JavaUnitExtractorAST(private val projectPath: String, private val testFile
                 var className = ""
                 val potentialClass = method.parent
                 if (potentialClass is TypeDeclaration) {
-                    className = ".${potentialClass.name}"
+                    className = potentialClass.name.toString()
                 }
 
                 CodeUnit(
-                    "${packageName}${className}.${method.name}",
+                    "${packageName}.${className}.${method.name}",
                     "${projectPath}/${filePath}",
                     startLine..braces!!.second,
                     CodeUnit.UnitTypes.CODE
