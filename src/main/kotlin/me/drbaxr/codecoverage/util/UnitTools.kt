@@ -91,6 +91,7 @@ class UnitTools {
         }
 
         fun getFilesToUnitsMap(units: List<CodeUnit>): Map<String, Set<CodeUnit>> {
+            // problem here?
             val filesToUnitsMap = mutableMapOf<String, MutableSet<CodeUnit>>()
 
             units.forEach {
@@ -99,7 +100,7 @@ class UnitTools {
                 if (unitsSet != null) {
                     unitsSet.add(it)
                 } else {
-                    filesToUnitsMap[it.hostFilePath] = mutableSetOf()
+                    filesToUnitsMap[it.hostFilePath] = mutableSetOf(it)
                 }
             }
 
