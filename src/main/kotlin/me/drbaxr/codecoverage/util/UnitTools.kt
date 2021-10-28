@@ -35,6 +35,7 @@ class UnitTools {
             return null
         }
 
+        @Deprecated("Only used in deprecated java extractor")
         fun findUnitHeaders(
             filePath: String,
             commentRemover: CommentRemover,

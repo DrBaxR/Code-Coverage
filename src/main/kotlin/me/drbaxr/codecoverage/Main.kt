@@ -58,7 +58,7 @@ fun run(config: Configuration) {
 
         if (possibleTestedUnitExtractor is TestedUnitExtractor) {
             testFiles.forEach {
-                val testedFromFile = possibleTestedUnitExtractor.findTestedUnits(it)
+                val testedFromFile = possibleTestedUnitExtractor.findTestedUnits(config.projectPath, it)
                 testedFromFile.forEach { unit -> testedUnits.add(unit) }
             }
         } else {

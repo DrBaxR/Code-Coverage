@@ -3,10 +3,10 @@ package me.drbaxr.codecoverage.extractors.unit.java
 import me.drbaxr.codecoverage.extractors.testfile.TestFileExtractor
 import me.drbaxr.codecoverage.extractors.unit.UnitExtractor
 import me.drbaxr.codecoverage.models.CodeUnit
+import me.drbaxr.codecoverage.parsers.JavaASTMethodParser
 import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
-import org.eclipse.jdt.core.dom.ASTNode
 import org.eclipse.jdt.core.dom.TypeDeclaration
 
 class JavaUnitExtractorAST(private val projectPath: String, private val testFileExtractor: TestFileExtractor) :
@@ -18,7 +18,7 @@ class JavaUnitExtractorAST(private val projectPath: String, private val testFile
         val units: List<List<CodeUnit>> = sourceFiles.map { filePath ->
             val fileLines = FileTools.getFileLines("${projectPath}/${filePath}")
             val fileSource = fileLines.fold("") { acc, s -> "${acc}${s}\n" }
-            val methodDeclarations = JavaASTParser.parse(fileSource)
+            val methodDeclarations = JavaASTMethodParser.parse(fileSource)
             val packageName = UnitTools.getJavaPackageName(fileLines)
 
             methodDeclarations.map {

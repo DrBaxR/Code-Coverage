@@ -1,4 +1,4 @@
-package me.drbaxr.codecoverage.extractors.unit.java;
+package me.drbaxr.codecoverage.parsers;
 
 import kotlin.Pair;
 import org.eclipse.jdt.core.dom.*;
@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.dom.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaASTParser {
+public class JavaASTMethodParser {
 
     private static CompilationUnit currentCompilationUnit;
 
