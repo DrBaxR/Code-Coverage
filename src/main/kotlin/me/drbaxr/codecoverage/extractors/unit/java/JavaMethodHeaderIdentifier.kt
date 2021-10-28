@@ -2,6 +2,7 @@ package me.drbaxr.codecoverage.extractors.unit.java
 
 import me.drbaxr.codecoverage.extractors.unit.HeaderIdentifier
 
+@Deprecated("No longer needed")
 class JavaMethodHeaderIdentifier : HeaderIdentifier {
     private val methodModifiers = listOf(
         "public",

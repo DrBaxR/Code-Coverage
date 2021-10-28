@@ -19,7 +19,7 @@ class JavaTestedUnitExtractorTest {
         val testFile =
             "src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo/TestMyTestClass.java"
         val actual = JavaTestedUnitExtractor(ue.findUnits())
-            .findTestedUnits(testFile)
+            .findTestedUnits("src/test/resources/sample-projects/junit-tests-master", testFile)
             .map { it.identifier }.toSet()
 
         assertEquals(expected, actual)
@@ -48,7 +48,7 @@ class JavaTestedUnitExtractorTest {
         val testFile =
             "src/test/resources/sample-projects/junit-tests-master/src/test/java/de/syngenio/demo3/TestController.java"
         val actual = JavaTestedUnitExtractor(ue.findUnits())
-            .findTestedUnits(testFile)
+            .findTestedUnits("src/test/resources/sample-projects/junit-tests-master", testFile)
             .map { it.identifier }.toSet()
 
         assertEquals(expected, actual)

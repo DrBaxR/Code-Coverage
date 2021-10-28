@@ -5,10 +5,11 @@ import me.drbaxr.codecoverage.models.CodeUnit
 import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
 
+@Deprecated("Use AST version instead")
 class JavaTestedUnitExtractor(allCodeUnits: List<CodeUnit>) :
     TestedUnitExtractor(allCodeUnits) {
 
-    override fun findTestedUnits(testFile: String): List<CodeUnit> {
+    override fun findTestedUnits(projectPath: String, testFile: String): List<CodeUnit> {
         val fileLines = FileTools.getFileLines(testFile)
         val nonCommentLines = JavaCommentRemover().removeCommentLines(fileLines)
             .map { it.second }

@@ -7,8 +7,7 @@ import me.drbaxr.codecoverage.util.FileTools
 import me.drbaxr.codecoverage.util.UnitTools
 import me.drbaxr.codecoverage.util.exceptions.StartingBraceNotFoundException
 
-// TODO: only use METHODS as units
-// the old (and maybe naive) implementation the java unit extractor
+@Deprecated("Use JavaUnitExtractorAST instead")
 class JavaUnitExtractor(private val projectPath: String, private val testFileExtractor: TestFileExtractor) :
     UnitExtractor(projectPath, testFileExtractor) {
 
