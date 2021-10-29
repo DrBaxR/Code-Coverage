@@ -18,7 +18,7 @@ class JavaUnitExtractorAST(private val projectPath: String, private val testFile
         val units: List<List<CodeUnit>> = sourceFiles.map { filePath ->
             val fileLines = FileTools.getFileLines("${projectPath}/${filePath}")
             val fileSource = fileLines.fold("") { acc, s -> "${acc}${s}\n" }
-            val methodDeclarations = JavaASTMethodParser.parse(fileSource)
+            val methodDeclarations = JavaASTMethodParser.parse(fileSource).filter { !it.first.isConstructor }
             val packageName = UnitTools.getJavaPackageName(fileLines)
 
             methodDeclarations.map {
