@@ -1,3 +1,6 @@
+# Note
+This project is not done and I will no longer be working on it **_in this repo_**. I decided to take a new approach for implementing the tool I've got in mind and since it's completely different to what has been implemented in this project I figured it would be much simpler to start from scratch that to try and modify the code of this project. You can find the new repo [here](https://github.com/dxworks/spektrum) if you are interested.
+
 # Code Coverage
 Tool that generates code coverage for a project without actually running tests for that project.
 
